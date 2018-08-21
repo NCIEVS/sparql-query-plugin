@@ -1,0 +1,16 @@
+prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select distinct ?code ?preferredname ?displayname ?fullsyn1
+where {
+    ?s ncit:NHC0 ?code .
+    ?s ncit:P90 ?fullsyn .
+    ?s ncit:P108 ?preferredname .
+    ?s ncit:P107 ?displayname .
+    [] a owl:Axiom ;
+      owl:annotatedSource ?s ;
+      owl:annotatedTarget ?fullsyn1 ;
+      owl:annotatedProperty ncit:P90 ;
+      ncit:term-source ?ts ;
+      ncit:term-group ?tt .
+    filter regex(str(?tt), "DN") .
+    filter regex(str(?ts), "CTRP") .
+}
