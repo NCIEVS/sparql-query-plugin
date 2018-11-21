@@ -78,14 +78,14 @@ public class OwlTripleStoreImpl implements OwlTripleStore {
     };
 	
 	
-	public OwlTripleStoreImpl(Repository repository, OWLDataFactory factory) {
+	public OwlTripleStoreImpl(Repository repository, OWLOntologyManager m) {
 		this.repository = repository;
 		ValueFactory rdfFactory = repository.getValueFactory();
 		hashCodeProperty        = rdfFactory.createURI(HASH_CODE);
 		sourceOntologyProperty  = rdfFactory.createURI(SOURCE_ONTOLOGY);
 		ontologyIdProperty      = rdfFactory.createURI(ONTOLOGY_ID);
 		ontologyVersionProperty = rdfFactory.createURI(ONTOLOGY_VERSION);
-		anonymousHandler = new AnonymousResourceHandler(factory);
+		anonymousHandler = new AnonymousResourceHandler(m);
 	}
 
 	@Override

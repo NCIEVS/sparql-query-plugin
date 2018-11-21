@@ -21,15 +21,15 @@ public class Utilities {
 		
 	}
 	
-	public static OwlTripleStore getOwlTripleStore(OWLDataFactory factory) throws RepositoryException {
+	public static OwlTripleStore getOwlTripleStore(OWLOntologyManager m) throws RepositoryException {
 		Sail sailStack = new MemoryStore();
 		Repository repository = new SailRepository(sailStack);
 		repository.initialize();
-		return new OwlTripleStoreImpl(repository, factory);
+		return new OwlTripleStoreImpl(repository, m);
 	}
 	
 	public static OwlTripleStore getOwlTripleStore(OWLOntologyManager manager, boolean sync) throws RepositoryException {
-		OwlTripleStore ots = getOwlTripleStore(manager.getOWLDataFactory());
+		OwlTripleStore ots = getOwlTripleStore(manager);
 		for (OWLOntology ontology : manager.getOntologies()) {
 			loadOwlTripleStore(ots, ontology, false);
 		}
@@ -40,7 +40,7 @@ public class Utilities {
 	}
 	
 	public static OwlTripleStore getOwlTripleStore(OWLOntology ontology, boolean sync) throws RepositoryException {
-		OwlTripleStore ots = getOwlTripleStore(ontology.getOWLOntologyManager().getOWLDataFactory());
+		OwlTripleStore ots = getOwlTripleStore(ontology.getOWLOntologyManager());
 		loadOwlTripleStore(ots, ontology, sync);
 		return ots;
 	}
