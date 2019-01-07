@@ -159,6 +159,7 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
 		executeQuery = new JButton("Execute");
+		panel.add(executeQuery);
 		
 		executeQuery.addActionListener(new ActionListener() {
 			
@@ -167,9 +168,14 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 				try {
 					String query = queryPane.getText();
 					long beg = System.currentTimeMillis();
+					
+					panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					
 					SparqlResultSet result = reasoner.executeQuery(query);
 					System.out.println("The query took " + (System.currentTimeMillis() - beg));
 					resultModel.setResults(result);
+					
+					panel.setCursor(Cursor.getDefaultCursor());
 				}
 				catch (SparqlReasonerException ex) {
 					ErrorLogPanel.showErrorDialog(ex);
@@ -177,7 +183,6 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 				}
 			}
 		});
-		panel.add(executeQuery);
 		
 		bookmarkBtn = new JButton("Bookmark");
 		bookmarkBtn.addActionListener(new ActionListener() {
