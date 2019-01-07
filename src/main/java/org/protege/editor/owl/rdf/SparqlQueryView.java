@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -159,7 +160,8 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
 		executeQuery = new JButton("Execute");
-		panel.add(executeQuery);
+		//executeQuery.
+		
 		
 		executeQuery.addActionListener(new ActionListener() {
 			
@@ -169,13 +171,24 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 					String query = queryPane.getText();
 					long beg = System.currentTimeMillis();
 					
-					panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					//panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					
 					SparqlResultSet result = reasoner.executeQuery(query);
 					System.out.println("The query took " + (System.currentTimeMillis() - beg));
+					if (result.getRowCount() == 0) {
+						List<Object> row = new ArrayList<Object>();
+						
+						row.add("NO RESULTS FOUND!!!");
+						
+						for (int i = 1; i < result.getColumnCount(); i++) {
+							row.add("");
+						}
+						result.addRow(row);
+						
+					}
 					resultModel.setResults(result);
 					
-					panel.setCursor(Cursor.getDefaultCursor());
+					//panel.setCursor(Cursor.getDefaultCursor());
 				}
 				catch (SparqlReasonerException ex) {
 					ErrorLogPanel.showErrorDialog(ex);
@@ -183,6 +196,8 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 				}
 			}
 		});
+		
+		panel.add(executeQuery);
 		
 		bookmarkBtn = new JButton("Bookmark");
 		bookmarkBtn.addActionListener(new ActionListener() {
