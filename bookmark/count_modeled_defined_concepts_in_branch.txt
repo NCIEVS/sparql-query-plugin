@@ -1,0 +1,18 @@
+#### count of modeled defined concepts in a branch, top node is included in the count
+#### sesame appears to have issues with some path expressions, hence the breakout below
+#### to use substitute your code with the one below in the "values" statement
+
+prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select (count(distinct ?subject) as ?modeled_defined_concept_count)
+where 
+{
+  values ?superclass { ncit:C4196 }
+
+  ?subject (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass ; 
+    owl:equivalentClass ?eq .
+  ?eq owl:intersectionOf ?in .
+  ?in rdf:rest* ?re .
+  ?re rdf:first ?an .
+  ?an owl:onProperty ?role  ;
+}
+

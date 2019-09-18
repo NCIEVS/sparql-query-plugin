@@ -1,0 +1,14 @@
+#### count of partially, or incorrectly, modeled concepts in a branch, top node is included in the count
+#### to use substitute your code with the one below in the "values" statement
+
+prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select (count(distinct ?subject) as ?partially_modeled_concept_count)
+where 
+{
+  values ?superclass { ncit:C7057 }
+ 
+ ?subject rdfs:subClassOf ?an ;
+    owl:equivalentClass ?an2 ;
+    (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass . 
+}
+

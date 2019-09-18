@@ -1,0 +1,13 @@
+#### count of defined concepts in a branch, top node is included in the count
+#### to use substitute your code with the one below in the "values" statement
+
+prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select (count(distinct ?subject) as ?defined_concept_count)
+where 
+{
+  values ?superclass { ncit:C25791 }
+
+  ?subject owl:equivalentClass ?an ;
+    (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass . 
+}
+

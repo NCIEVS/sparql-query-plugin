@@ -1,0 +1,13 @@
+#### count of modeled primitive concepts in a branch, top node is included in the count
+#### to use substitute your code with the one below in the "values" statement
+
+prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select (count(distinct ?subject) as ?modeled_primitive_concept_count)
+where 
+{
+  values ?superclass { ncit:C25791 }
+
+  ?subject rdfs:subClassOf ?an .
+  ?an owl:onProperty ?role .
+  ?subject  (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass . 
+}

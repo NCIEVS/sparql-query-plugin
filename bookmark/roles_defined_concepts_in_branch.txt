@@ -1,0 +1,22 @@
+#### roles asserted on defined concepts in a branch, top node is included in the resultset
+#### to use substitute your code with the one below in the "values" statement; keep the ncit: prefix
+
+prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select  (str(?subject_label) as ?defined_concept) (str(?prop_label) as ?role) (str(?filler_label) as ?target)
+where 
+{
+  values ?superclass { ncit:C25791 }
+ 
+  ?subject (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass ; 
+    owl:equivalentClass ?eq .
+  ?eq owl:intersectionOf ?in .
+  ?in rdf:rest* ?re .
+  ?re rdf:first ?an .
+  ?an owl:onProperty ?prop ;
+    owl:someValuesFrom ?filler .
+  ?filler rdfs:label ?filler_label .
+  ?prop rdfs:label ?prop_label .
+  ?subject rdfs:label ?subject_label .
+}
+order by ?concept ?role ?target
+

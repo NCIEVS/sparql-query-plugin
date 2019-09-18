@@ -1,0 +1,6 @@
+PREFIX ncit:<http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+SELECT ?subject 
+    WHERE {
+        ?subject rdfs:subClassOf* ncit:C16612
+        }
+    order by asc(?subject)

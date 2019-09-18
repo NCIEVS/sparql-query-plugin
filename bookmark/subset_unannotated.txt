@@ -1,0 +1,27 @@
+# query finds concepts in a subset that are missing an editor note with
+# a specific value.  To use:
+# 1) in line 19 enter the code of the concept in subset target, replacing ncit:C159328
+# with the target code of interest (prefixed with "ncit:"), and
+# 2) in line 12 enter the value of the editor note (in quotes) that is missing in 
+# the concepts of interest.
+
+prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select distinct (str(?concept_pt) as ?pt) (str(?concept_code) as ?code)
+where 
+{
+  values ?note_value { "CPTAC24July" }
+
+  ?s rdfs:label ?concept_pt ;
+    ncit:NHC0  ?concept_code .
+  {
+    select ?s
+	{
+      values ?subset { ncit:C159328 }
+
+      ?s ncit:A8 ?subset .
+    }
+  }
+  filter not exists  {?s ncit:P95 ?editor_note .  filter regex (str(?editor_note), ?note_value)}
+}
+order by ?pt
+

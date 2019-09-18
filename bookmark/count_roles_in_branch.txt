@@ -1,0 +1,24 @@
+#### total count of roles asserted on concepts (both primitive and defined) in a branch, top node is included in the resultset
+#### to use substitute your code with the one below in the "values" statement; keep the ncit: prefix
+
+prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select  (count(?prop) as ?total_role_count)
+where 
+{
+  values ?superclass { ncit:C3262 }
+  {
+    ?subject (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass ; 
+      owl:equivalentClass ?eq .
+    ?eq owl:intersectionOf ?in .
+    ?in rdf:rest* ?re .
+    ?re rdf:first ?an .
+    ?an owl:onProperty ?prop .
+  }
+  union
+  {
+    ?subject rdfs:subClassOf ?an ;
+      (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass . 
+    ?an owl:onProperty ?prop .
+  }
+}
+

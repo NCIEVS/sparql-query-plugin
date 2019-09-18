@@ -1,0 +1,14 @@
+#### count of roles asserted on primitive concepts in a branch, count includes the top node's
+#### to use substitute your code with the one below in the "values" statement
+
+prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select  (count(?an) as ?primitive_concept_role_count)
+# ?subject_label ?role_label ?filler_label
+where 
+{
+  values ?superclass { ncit:C25791 }
+ 
+ ?subject rdfs:subClassOf ?an ;
+    (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass . 
+  ?an owl:onProperty ?role ;
+}
