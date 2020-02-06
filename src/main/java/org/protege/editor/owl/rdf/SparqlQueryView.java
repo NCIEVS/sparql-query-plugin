@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -72,21 +73,22 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 			file.mkdir();
 	
 		}
-		String[] filenames = file.list();
+		
+		List<String> listFile = Arrays.asList(file.list());
 		
 		try {
-			for(int i = 0; i < filenames.length; i++) {
-				File localfile = new File("." + File.separator + "bookmark" + File.separator + filenames[i]);
+			for(String s:listFile) {
+				File localfile = new File("." + File.separator + "bookmark" + File.separator + s);
 				Scanner scanner = new Scanner(localfile);
 				
 				String value = scanner.useDelimiter("\\Z").next();
 				
 				String bookmark = null; 
-				if(!filenames[i].contains(".")) {
-					bookmark = filenames[i];
+				if(!s.contains(".")) {
+					bookmark = s;
 				}
 				else {
-					bookmark = filenames[i].substring(0, filenames[i].indexOf('.'));
+					bookmark = s.substring(0, s.indexOf('.'));
 				}
 				
 				queryMap.put(bookmark, value);
@@ -104,9 +106,16 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(0,1));
 		DefaultListModel<String> model = new DefaultListModel<>();
-		Set<String> bookmarkKeys = queryMap.keySet();
+		
+		Set<String> bmk = queryMap.keySet();
+		
+		List<String> bookmarkKeys = new ArrayList<String>();
+		bookmarkKeys.addAll(bmk);
+		
 		//first add new query to list and newquery key pair to hasmap
-		model.addElement("NewQuery");		
+		model.addElement("NewQuery");
+		
+		Collections.sort(bookmarkKeys, String.CASE_INSENSITIVE_ORDER);
 		
 		for(String bookmark : bookmarkKeys) {
 			model.addElement(bookmark);
