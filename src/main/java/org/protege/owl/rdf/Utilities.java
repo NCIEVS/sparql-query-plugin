@@ -1,19 +1,16 @@
 package org.protege.owl.rdf;
 
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.memory.MemoryStore;
+
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.protege.owl.rdf.api.OwlTripleStore;
 import org.protege.owl.rdf.impl.OwlTripleStoreImpl;
 import org.protege.owl.rdf.impl.SynchronizeTripleStoreListener;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-
-import java.lang.NumberFormatException;
 
 public class Utilities {
 

@@ -3,10 +3,10 @@ package org.protege.editor.owl.rdf.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openrdf.model.Statement;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.protege.editor.owl.rdf.SparqlResultSet;
 import org.protege.owl.rdf.api.OwlTripleStore;
 

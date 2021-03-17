@@ -8,13 +8,15 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import org.openrdf.model.BNode;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -30,9 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class RDFTranslator extends AbstractTranslator<Value, Resource, org.openrdf.model.URI, org.openrdf.model.Literal> {
+public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Literal> {
     public static final Logger LOGGER = LoggerFactory.getLogger(RDFTranslator.class);
-	private org.openrdf.model.URI axiomResource;
+	private URI axiomResource;
 
 	/**
 	 * There is a dangerous bend coming up!  If you don't use the identity hash map then this 
@@ -50,9 +52,9 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, org.openr
 	private RepositoryConnection connection;
 	
         public static void translate(Repository repository, OWLAxiom axiom, 
-	                             org.openrdf.model.URI hashCodeProperty,
-	                             org.openrdf.model.URI sourceOntologyProperty,
-	                             org.openrdf.model.URI ontologyRepresentative) throws RepositoryException {
+	                             URI hashCodeProperty,
+	                             URI sourceOntologyProperty,
+	                             URI ontologyRepresentative) throws RepositoryException {
 	    if (LOGGER.isDebugEnabled()) {
 	        LOGGER.debug("Starting axiom parse");
 	    }
@@ -85,9 +87,9 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, org.openr
 	}
         
         public static void translate(Repository repository, Set<OWLAxiom> axioms, 
-	                             org.openrdf.model.URI hashCodeProperty,
-	                             org.openrdf.model.URI sourceOntologyProperty,
-	                             org.openrdf.model.URI ontologyRepresentative) throws RepositoryException {
+	                             URI hashCodeProperty,
+	                             URI sourceOntologyProperty,
+	                             URI ontologyRepresentative) throws RepositoryException {
 	    if (LOGGER.isDebugEnabled()) {
 	        LOGGER.debug("Starting axiom parse");
 	    }
@@ -120,10 +122,10 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, org.openr
 		}
 	}
         
-        private static void addControlTriples(Repository repository,RDFTranslator translator, OWLAxiom axiom,org.openrdf.model.URI hashCodeProperty, org.openrdf.model.URI sourceOntologyProperty, org.openrdf.model.URI ontologyRepresentative) throws RepositoryException{
+        private static void addControlTriples(Repository repository, RDFTranslator translator, OWLAxiom axiom, URI hashCodeProperty, URI sourceOntologyProperty, URI ontologyRepresentative) throws RepositoryException{
                         ValueFactory rdfFactory = repository.getValueFactory();
                         RepositoryConnection connection = translator.getConnection();
-                        org.openrdf.model.Literal hashCodeValue = rdfFactory.createLiteral(axiom.hashCode());
+                        Literal hashCodeValue = rdfFactory.createLiteral(axiom.hashCode());
 			connection.add(translator.axiomResource, hashCodeProperty, hashCodeValue);
 			connection.add(translator.axiomResource, sourceOntologyProperty, ontologyRepresentative);
         }
@@ -172,17 +174,17 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, org.openr
 		return connection;
 	}
 	
-	public org.openrdf.model.URI getAxiomResource() {
+	public URI getAxiomResource() {
 		return axiomResource;
 	}
 
 	@Override
-	protected org.openrdf.model.URI getResourceNode(IRI iri) {
+	protected URI getResourceNode(IRI iri) {
 		return rdfFactory.createURI(iri.toString());
 	}
 
 	@Override
-	protected org.openrdf.model.URI getPredicateNode(IRI iri) {
+	protected URI getPredicateNode(IRI iri) {
 		return rdfFactory.createURI(iri.toString());
 	}
 
@@ -202,7 +204,7 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, org.openr
 	}
 
 	@Override
-	protected org.openrdf.model.Literal getLiteralNode(OWLLiteral literal) {
+	protected Literal getLiteralNode(OWLLiteral literal) {
 		if (literal.isRDFPlainLiteral() && literal.getLang() != null) {
 			return rdfFactory.createLiteral(literal.getLiteral(), literal.getLang());
 		}
@@ -215,7 +217,7 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, org.openr
 	}
 
 	@Override
-	protected void addTriple(Resource subject, org.openrdf.model.URI pred, Value object) {
+	protected void addTriple(Resource subject, URI pred, Value object) {
 		try {
 		    if (LOGGER.isDebugEnabled()) {
 		        LOGGER.debug("Inserting triple into graph with name " + axiomResource);
