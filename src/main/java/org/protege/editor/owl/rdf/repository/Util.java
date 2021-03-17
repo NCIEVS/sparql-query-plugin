@@ -1,12 +1,9 @@
 package org.protege.editor.owl.rdf.repository;
 
-import org.openrdf.model.BNode;
-import org.openrdf.model.Value;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.sail.memory.model.MemLiteral;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.sail.memory.model.MemLiteral;
 import org.protege.owl.rdf.api.OwlTripleStore;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLClassExpression;
 
 public class Util {
 	public static long tot_tim = 0;
