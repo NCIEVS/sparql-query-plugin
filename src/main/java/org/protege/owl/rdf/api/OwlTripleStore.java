@@ -1,6 +1,6 @@
 package org.protege.owl.rdf.api;
 
-import info.aduna.iteration.CloseableIteration;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import java.util.Set;
 
 import org.eclipse.rdf4j.model.BNode;
