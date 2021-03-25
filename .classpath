@@ -28,5 +28,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/rdf4j-model"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rdf4j-queryparser-serql"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rdf4j-queryparser-sparql"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rdf4j-repository-sail"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
