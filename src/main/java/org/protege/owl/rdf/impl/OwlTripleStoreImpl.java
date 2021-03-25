@@ -323,7 +323,7 @@ public class OwlTripleStoreImpl implements OwlTripleStore {
 		        }
 		        String subjectName = generateName(stmt.getSubject());
 		        String predicateName = generateName(stmt.getPredicate());
-		        if (stmt.getObject() instanceof org.openrdf.model.Literal) {
+		        if (stmt.getObject() instanceof org.eclipse.rdf4j.model.Literal) {
 		            addTriple(consumer, subjectName, predicateName, (Literal) stmt.getObject());
 		        } else {
 		            addTriple(consumer, subjectName, predicateName, (Resource) stmt.getObject());

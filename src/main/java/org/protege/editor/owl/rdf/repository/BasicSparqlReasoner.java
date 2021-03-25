@@ -12,7 +12,7 @@ import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
-import org.openrdf.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.protege.editor.owl.rdf.SparqlReasoner;
 import org.protege.editor.owl.rdf.SparqlReasonerException;
 import org.protege.editor.owl.rdf.SparqlResultSet;
@@ -92,6 +92,7 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 	
 	private SparqlResultSet handleTupleQuery(TupleQuery tupleQuery) throws QueryEvaluationException, TupleQueryResultHandlerException {
 		TupleQueryHandler handler = new TupleQueryHandler(triples);
+		tupleQuery.setMaxExecutionTime(30);
 		tupleQuery.evaluate(handler);
 		System.out.println("total time spent in handler " + handler.getTotTime());
 		System.out.println("total time spent in convertin anon nodes " + Util.tot_tim);

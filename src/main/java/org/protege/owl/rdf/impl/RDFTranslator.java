@@ -97,9 +97,10 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 		RDFTranslator translator = null;		
 		try {		       
 	        OWLOntology ontology = manager.createOntology(axioms);
+	        translator = new RDFTranslator(repository, manager, ontology);
 	        	
                 for (OWLAxiom axiom: axioms) { 
-                	translator = new RDFTranslator(repository, manager, ontology);
+                	//translator = new RDFTranslator(repository, manager, ontology);
                     axiom.accept(translator);
                     addRdfTypes(repository,translator,axiom);
                     addControlTriples(repository,translator,axiom,hashCodeProperty,sourceOntologyProperty,ontologyRepresentative);
@@ -151,7 +152,7 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 
 
 	private RDFTranslator(Repository repository, OWLOntologyManager manager, OWLOntology ontology) throws RepositoryException {
-		super(manager, ontology, false, new OWLAnonymousIndividualsWithMultipleOccurrences());
+		super(manager, ontology, null, false, new OWLAnonymousIndividualsWithMultipleOccurrences(), null);
 		rdfFactory = repository.getValueFactory();
 		axiomResource = rdfFactory.createURI(OwlTripleStoreImpl.NS + "/" + UUID.randomUUID().toString().replace('-', '_'));
 		connection = repository.getConnection();
