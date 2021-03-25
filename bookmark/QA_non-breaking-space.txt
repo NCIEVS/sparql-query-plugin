@@ -1,0 +1,9 @@
+# catches unicode non-breaking spaces in all properties
+
+prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#> 
+select (str(?ccode) as ?code) (str(?clabel) as ?label) (str(?o) as ?property_value)
+where {
+  ?s ?p ?o filter regex(str(?o), "[\u00A0]") .
+  ?p rdfs:label ?clabel .
+  ?s ncit:NHC0 ?ccode .
+}

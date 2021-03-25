@@ -1,0 +1,9 @@
+# catches multiple URIs in property values
+
+prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#> 
+select (str(?ccode) as ?code) (str(?clabel) as ?label) (str(?o) as ?property_value)
+where {
+  ?s ?p ?o filter regex(str(?o), "http.+http") .
+  ?p rdfs:label ?clabel .
+  ?s ncit:NHC0 ?ccode .
+}

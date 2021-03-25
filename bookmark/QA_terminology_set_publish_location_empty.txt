@@ -1,0 +1,19 @@
+# for QA of terminology sets
+# returns the terminology set code & label, the publish_value & value_location if they exist, and whether the set is empty 
+
+PREFIX ncit:<http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+SELECT (str(?lcode) as ?code) (str(?val_set_label) as ?label) (str(?lpublish_value) as ?publish_value) (str(?lvalue_location) as ?value_location) (str(?lempty) as ?empty)
+WHERE {
+	values ?terminology_sets { ncit:C54443 }
+	values ?publish { ncit:P372 }
+	values ?location { ncit:P374 }
+	values ?concept_in_subset { ncit:A8 }
+	
+	?val_set rdfs:subClassOf+ ?terminology_sets ; 
+		rdfs:label ?val_set_label ;
+		ncit:NHC0 ?lcode .
+	optional { ?val_set ?publish ?lpublish_value . }
+	optional { ?val_set ?location ?lvalue_location . }
+	bind( not exists { ?concept ?concept_in_subset ?val_set } as ?lempty)
+}
+order by asc(?label)
