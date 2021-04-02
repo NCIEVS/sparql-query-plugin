@@ -45,11 +45,10 @@ public class Utilities {
 	public static void loadOwlTripleStore(OwlTripleStore ots, OWLOntology ontology, boolean sync) throws RepositoryException {
 	    long beg = System.currentTimeMillis();
 		ots.addAxioms(ontology.getOntologyID(), ontology.getAxioms());
-		System.out.println("To load tiple store with axioms takes " + (System.currentTimeMillis() - beg));
 		if (sync) {
 			synchronize(ots, ontology.getOWLOntologyManager());
 		}
-		System.out.println("To load tiple store with axioms and syn takes " + (System.currentTimeMillis() - beg));
+		System.out.println("To load triple store with axioms and sync takes " + (System.currentTimeMillis() - beg));
 	}
 	
 	public static void synchronize(OwlTripleStore ots, OWLOntologyManager manager) {

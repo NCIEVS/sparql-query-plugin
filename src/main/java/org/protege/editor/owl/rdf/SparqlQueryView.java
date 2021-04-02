@@ -36,6 +36,7 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 	private SparqlReasoner reasoner;
 	private JList bookmarkList;
 	private JTextPane queryPane;
+	private JSpinner timeout;
 	private JButton executeQuery;
 	private JButton bookmarkBtn;
 	private JButton exportBtn;
@@ -168,6 +169,17 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 	private JComponent createBottomComponent() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
+
+		timeout = new JSpinner(new SpinnerNumberModel(30, 1, 120, 1));
+		
+		JPanel tim = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+		
+		tim.add(new JLabel("Timeout"));
+
+		tim.add(timeout);
+		
+		panel.add(tim);
+		
 		executeQuery = new JButton("Execute");
 		//executeQuery.
 		
@@ -182,7 +194,9 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 					
 					//panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					
-					SparqlResultSet result = reasoner.executeQuery(query);
+					System.out.println("Timeout: " + timeout.getValue());
+					
+					SparqlResultSet result = reasoner.executeQuery(query, (Integer) timeout.getValue());
 					System.out.println("The query took " + (System.currentTimeMillis() - beg));
 					if (result.getRowCount() == 0) {
 						List<Object> row = new ArrayList<Object>();
@@ -207,6 +221,9 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 		});
 		
 		panel.add(executeQuery);
+		
+		
+		
 		
 		bookmarkBtn = new JButton("Bookmark");
 		bookmarkBtn.addActionListener(new ActionListener() {

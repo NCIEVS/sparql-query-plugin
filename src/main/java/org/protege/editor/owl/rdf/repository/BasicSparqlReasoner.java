@@ -59,7 +59,7 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 	}
 	
 	@Override
-	public SparqlResultSet executeQuery(String queryString) throws SparqlReasonerException {
+	public SparqlResultSet executeQuery(String queryString, int timeout) throws SparqlReasonerException {
 		precalculate();
 		try {
 			RepositoryConnection connection = null;
@@ -67,13 +67,13 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 				connection = triples.getRepository().getConnection();
 				Query query = connection.prepareQuery(QueryLanguage.SPARQL, queryString);
 				if (query instanceof TupleQuery) {
-					return handleTupleQuery((TupleQuery) query);
+					return handleTupleQuery((TupleQuery) query, timeout);
 				}
 				else if (query instanceof GraphQuery) {
-					return handleGraphQuery((GraphQuery) query);
+					return handleGraphQuery((GraphQuery) query, timeout);
 				}
 				else if (query instanceof BooleanQuery) {
-					return handleBooleanQuery((BooleanQuery) query);
+					return handleBooleanQuery((BooleanQuery) query, timeout);
 				}
 				else {
 					throw new IllegalStateException("Can't handle queries of type " + query.getClass());
@@ -90,9 +90,11 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 		}
 	}
 	
-	private SparqlResultSet handleTupleQuery(TupleQuery tupleQuery) throws QueryEvaluationException, TupleQueryResultHandlerException {
+	private SparqlResultSet handleTupleQuery(TupleQuery tupleQuery, int timeout) throws QueryEvaluationException, TupleQueryResultHandlerException {
 		TupleQueryHandler handler = new TupleQueryHandler(triples);
-		tupleQuery.setMaxExecutionTime(30);
+		if (timeout > 0) {
+			tupleQuery.setMaxExecutionTime(timeout);
+		}
 		tupleQuery.evaluate(handler);
 		System.out.println("total time spent in handler " + handler.getTotTime());
 		System.out.println("total time spent in convertin anon nodes " + Util.tot_tim);
@@ -100,17 +102,23 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 		return handler.getQueryResult();
 	}
 	
-	private SparqlResultSet handleGraphQuery(GraphQuery graph) throws QueryEvaluationException, RDFHandlerException {
+	private SparqlResultSet handleGraphQuery(GraphQuery graph, int timeout) throws QueryEvaluationException, RDFHandlerException {
 		GraphQueryHandler handler = new GraphQueryHandler(triples);
+		if (timeout > 0) {
+			graph.setMaxExecutionTime(timeout);
+		}
 		graph.evaluate(handler);
 		return handler.getQueryResult();
 	}
 	
-	private SparqlResultSet handleBooleanQuery(BooleanQuery booleanQuery) throws QueryEvaluationException {
+	private SparqlResultSet handleBooleanQuery(BooleanQuery booleanQuery, int timeout) throws QueryEvaluationException {
 		List<String> columnNames = new ArrayList<String>();
 		columnNames.add("Result");
 		SparqlResultSet result = new SparqlResultSet(columnNames);
 		List<Object> row = new ArrayList<Object>();
+		if (timeout > 0) {
+			booleanQuery.setMaxExecutionTime(timeout);
+		}
 		row.add(booleanQuery.evaluate() ? "True" : "False");
 		result.addRow(row);
 		return result;

@@ -11,14 +11,13 @@ import javax.annotation.Nonnull;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -32,9 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Literal> {
+public class RDFTranslator extends AbstractTranslator<Value, Resource, IRI, Literal> {
     public static final Logger LOGGER = LoggerFactory.getLogger(RDFTranslator.class);
-	private URI axiomResource;
+	private IRI axiomResource;
 
 	/**
 	 * There is a dangerous bend coming up!  If you don't use the identity hash map then this 
@@ -52,9 +51,9 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 	private RepositoryConnection connection;
 	
         public static void translate(Repository repository, OWLAxiom axiom, 
-	                             URI hashCodeProperty,
-	                             URI sourceOntologyProperty,
-	                             URI ontologyRepresentative) throws RepositoryException {
+	                             IRI hashCodeProperty,
+	                             IRI sourceOntologyProperty,
+	                             IRI ontologyRepresentative) throws RepositoryException {
 	    if (LOGGER.isDebugEnabled()) {
 	        LOGGER.debug("Starting axiom parse");
 	    }
@@ -87,26 +86,26 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 	}
         
         public static void translate(Repository repository, Set<OWLAxiom> axioms, 
-	                             URI hashCodeProperty,
-	                             URI sourceOntologyProperty,
-	                             URI ontologyRepresentative) throws RepositoryException {
+	                             IRI hashCodeProperty,
+	                             IRI sourceOntologyProperty,
+	                             IRI ontologyRepresentative) throws RepositoryException {
 	    if (LOGGER.isDebugEnabled()) {
 	        LOGGER.debug("Starting axiom parse");
 	    }
 		boolean success = false;
 		RDFTranslator translator = null;		
 		try {		       
-	        OWLOntology ontology = manager.createOntology(axioms);
-	        translator = new RDFTranslator(repository, manager, ontology);
-	        	
-                for (OWLAxiom axiom: axioms) { 
-                	//translator = new RDFTranslator(repository, manager, ontology);
-                    axiom.accept(translator);
-                    addRdfTypes(repository,translator,axiom);
-                    addControlTriples(repository,translator,axiom,hashCodeProperty,sourceOntologyProperty,ontologyRepresentative);
-                    }
-          	success = true;
-                }
+			OWLOntology ontology = manager.createOntology(axioms);
+			translator = new RDFTranslator(repository, manager, ontology);
+
+			for (OWLAxiom axiom: axioms) { 
+				//translator = new RDFTranslator(repository, manager, ontology);
+				axiom.accept(translator);
+				addRdfTypes(repository,translator,axiom);
+				addControlTriples(repository,translator,axiom,hashCodeProperty,sourceOntologyProperty,ontologyRepresentative);
+			}
+			success = true;
+		}
 		catch (RepositoryRuntimeException rre) {
 			throw rre.getCause();
 		}
@@ -123,7 +122,8 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 		}
 	}
         
-        private static void addControlTriples(Repository repository, RDFTranslator translator, OWLAxiom axiom, URI hashCodeProperty, URI sourceOntologyProperty, URI ontologyRepresentative) throws RepositoryException{
+        private static void addControlTriples(Repository repository, RDFTranslator translator, OWLAxiom axiom, 
+        		IRI hashCodeProperty, IRI sourceOntologyProperty, IRI ontologyRepresentative) throws RepositoryException{
                         ValueFactory rdfFactory = repository.getValueFactory();
                         RepositoryConnection connection = translator.getConnection();
                         Literal hashCodeValue = rdfFactory.createLiteral(axiom.hashCode());
@@ -136,9 +136,9 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
             ValueFactory rdfFactory = repository.getValueFactory();
             for (OWLEntity entity : axiom.getSignature()) {  // why aren't these getting included?
 			       
-                connection.add(rdfFactory.createURI(entity.getIRI().toString()), 
-			            rdfFactory.createURI(OWLRDFVocabulary.RDF_TYPE.getIRI().toString()), 
-			            rdfFactory.createURI(entity.getEntityType().getVocabulary().getIRI().toString()), 
+                connection.add(rdfFactory.createIRI(entity.getIRI().toString()), 
+			            rdfFactory.createIRI(OWLRDFVocabulary.RDF_TYPE.getIRI().toString()), 
+			            rdfFactory.createIRI(entity.getEntityType().getVocabulary().getIRI().toString()), 
                                 translator.axiomResource);
 			}
             
@@ -154,7 +154,7 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 	private RDFTranslator(Repository repository, OWLOntologyManager manager, OWLOntology ontology) throws RepositoryException {
 		super(manager, ontology, null, false, new OWLAnonymousIndividualsWithMultipleOccurrences(), null);
 		rdfFactory = repository.getValueFactory();
-		axiomResource = rdfFactory.createURI(OwlTripleStoreImpl.NS + "/" + UUID.randomUUID().toString().replace('-', '_'));
+		axiomResource = rdfFactory.createIRI(OwlTripleStoreImpl.NS + "/" + UUID.randomUUID().toString().replace('-', '_'));
 		connection = repository.getConnection();
 	}
         
@@ -175,19 +175,11 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 		return connection;
 	}
 	
-	public URI getAxiomResource() {
+	public IRI getAxiomResource() {
 		return axiomResource;
 	}
 
-	@Override
-	protected URI getResourceNode(IRI iri) {
-		return rdfFactory.createURI(iri.toString());
-	}
-
-	@Override
-	protected URI getPredicateNode(IRI iri) {
-		return rdfFactory.createURI(iri.toString());
-	}
+	
 
 	@Override
 	protected BNode getAnonymousNode(Object key) {
@@ -213,12 +205,12 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 			return rdfFactory.createLiteral(literal.getLiteral());
 		}
 		else {
-			return rdfFactory.createLiteral(literal.getLiteral(), rdfFactory.createURI(literal.getDatatype().getIRI().toString()));
+			return rdfFactory.createLiteral(literal.getLiteral(), rdfFactory.createIRI(literal.getDatatype().getIRI().toString()));
 		}
 	}
 
 	@Override
-	protected void addTriple(Resource subject, URI pred, Value object) {
+	protected void addTriple(Resource subject, IRI pred, Value object) {
 		try {
 		    if (LOGGER.isDebugEnabled()) {
 		        LOGGER.debug("Inserting triple into graph with name " + axiomResource);
@@ -229,6 +221,18 @@ public class RDFTranslator extends AbstractTranslator<Value, Resource, URI, Lite
 		catch (RepositoryException e) {
 			throw new RepositoryRuntimeException(e);
 		}
+	}
+
+	@Override
+	protected Resource getResourceNode(org.semanticweb.owlapi.model.IRI iri) {
+		// TODO Auto-generated method stub
+		return rdfFactory.createIRI(iri.toString());
+	}
+
+	@Override
+	protected IRI getPredicateNode(org.semanticweb.owlapi.model.IRI iri) {
+		// TODO Auto-generated method stub
+		return rdfFactory.createIRI(iri.toString());
 	}
 
 }
