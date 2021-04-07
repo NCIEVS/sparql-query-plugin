@@ -3,16 +3,17 @@ package org.protege.editor.owl.rdf.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import org.eclipse.rdf4j.query.BooleanQuery;
-import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.Query;
-import org.eclipse.rdf4j.query.QueryEvaluationException;
-import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
+
+import org.openrdf.query.BooleanQuery;
+import org.openrdf.query.GraphQuery;
+import org.openrdf.query.Query;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResultHandlerException;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFHandlerException;
 import org.protege.editor.owl.rdf.SparqlReasoner;
 import org.protege.editor.owl.rdf.SparqlReasonerException;
 import org.protege.editor.owl.rdf.SparqlResultSet;
@@ -59,7 +60,7 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 	}
 	
 	@Override
-	public SparqlResultSet executeQuery(String queryString, int timeout) throws SparqlReasonerException {
+	public SparqlResultSet executeQuery(String queryString) throws SparqlReasonerException {
 		precalculate();
 		try {
 			RepositoryConnection connection = null;
@@ -67,13 +68,13 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 				connection = triples.getRepository().getConnection();
 				Query query = connection.prepareQuery(QueryLanguage.SPARQL, queryString);
 				if (query instanceof TupleQuery) {
-					return handleTupleQuery((TupleQuery) query, timeout);
+					return handleTupleQuery((TupleQuery) query);
 				}
 				else if (query instanceof GraphQuery) {
-					return handleGraphQuery((GraphQuery) query, timeout);
+					return handleGraphQuery((GraphQuery) query);
 				}
 				else if (query instanceof BooleanQuery) {
-					return handleBooleanQuery((BooleanQuery) query, timeout);
+					return handleBooleanQuery((BooleanQuery) query);
 				}
 				else {
 					throw new IllegalStateException("Can't handle queries of type " + query.getClass());
@@ -90,11 +91,8 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 		}
 	}
 	
-	private SparqlResultSet handleTupleQuery(TupleQuery tupleQuery, int timeout) throws QueryEvaluationException, TupleQueryResultHandlerException {
+	private SparqlResultSet handleTupleQuery(TupleQuery tupleQuery) throws QueryEvaluationException, TupleQueryResultHandlerException {
 		TupleQueryHandler handler = new TupleQueryHandler(triples);
-		if (timeout > 0) {
-			tupleQuery.setMaxExecutionTime(timeout);
-		}
 		tupleQuery.evaluate(handler);
 		System.out.println("total time spent in handler " + handler.getTotTime());
 		System.out.println("total time spent in convertin anon nodes " + Util.tot_tim);
@@ -102,23 +100,17 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 		return handler.getQueryResult();
 	}
 	
-	private SparqlResultSet handleGraphQuery(GraphQuery graph, int timeout) throws QueryEvaluationException, RDFHandlerException {
+	private SparqlResultSet handleGraphQuery(GraphQuery graph) throws QueryEvaluationException, RDFHandlerException {
 		GraphQueryHandler handler = new GraphQueryHandler(triples);
-		if (timeout > 0) {
-			graph.setMaxExecutionTime(timeout);
-		}
 		graph.evaluate(handler);
 		return handler.getQueryResult();
 	}
 	
-	private SparqlResultSet handleBooleanQuery(BooleanQuery booleanQuery, int timeout) throws QueryEvaluationException {
+	private SparqlResultSet handleBooleanQuery(BooleanQuery booleanQuery) throws QueryEvaluationException {
 		List<String> columnNames = new ArrayList<String>();
 		columnNames.add("Result");
 		SparqlResultSet result = new SparqlResultSet(columnNames);
 		List<Object> row = new ArrayList<Object>();
-		if (timeout > 0) {
-			booleanQuery.setMaxExecutionTime(timeout);
-		}
 		row.add(booleanQuery.evaluate() ? "True" : "False");
 		result.addRow(row);
 		return result;

@@ -1,6 +1,6 @@
 package org.protege.owl.rdf.impl;
 
-import org.eclipse.rdf4j.repository.RepositoryException;
+import org.openrdf.repository.RepositoryException;
 
 public class RepositoryRuntimeException extends RuntimeException {
 	private static final long serialVersionUID = -7871457225828300162L;

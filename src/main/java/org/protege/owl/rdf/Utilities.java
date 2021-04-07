@@ -1,16 +1,19 @@
 package org.protege.owl.rdf;
 
-
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.sail.Sail;
-import org.eclipse.rdf4j.sail.memory.MemoryStore;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.sail.Sail;
+import org.openrdf.sail.memory.MemoryStore;
 import org.protege.owl.rdf.api.OwlTripleStore;
 import org.protege.owl.rdf.impl.OwlTripleStoreImpl;
 import org.protege.owl.rdf.impl.SynchronizeTripleStoreListener;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+
+import java.lang.NumberFormatException;
 
 public class Utilities {
 
@@ -45,10 +48,11 @@ public class Utilities {
 	public static void loadOwlTripleStore(OwlTripleStore ots, OWLOntology ontology, boolean sync) throws RepositoryException {
 	    long beg = System.currentTimeMillis();
 		ots.addAxioms(ontology.getOntologyID(), ontology.getAxioms());
+		System.out.println("To load tiple store with axioms takes " + (System.currentTimeMillis() - beg));
 		if (sync) {
 			synchronize(ots, ontology.getOWLOntologyManager());
 		}
-		System.out.println("To load triple store with axioms and sync takes " + (System.currentTimeMillis() - beg));
+		System.out.println("To load tiple store with axioms and syn takes " + (System.currentTimeMillis() - beg));
 	}
 	
 	public static void synchronize(OwlTripleStore ots, OWLOntologyManager manager) {

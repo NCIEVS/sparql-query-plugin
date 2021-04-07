@@ -3,13 +3,13 @@ package org.protege.editor.owl.rdf.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.rdf4j.query.Binding;
-import org.eclipse.rdf4j.query.BindingSet;
-import org.eclipse.rdf4j.query.QueryResultHandlerException;
-import org.eclipse.rdf4j.query.TupleQueryResultHandler;
-import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.model.Value;
+import org.openrdf.model.Value;
+import org.openrdf.query.Binding;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.QueryResultHandlerException;
+import org.openrdf.query.TupleQueryResultHandler;
+import org.openrdf.query.TupleQueryResultHandlerException;
+import org.openrdf.repository.RepositoryException;
 import org.protege.editor.owl.rdf.SparqlResultSet;
 import org.protege.owl.rdf.api.OwlTripleStore;
 
