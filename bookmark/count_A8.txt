@@ -1,10 +1,6 @@
-PREFIX :<http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
- 
-SELECT (count(distinct ?concept_code) as ?Count_ValueSet )
-{  
-    {
-       ?c a owl:Class .
-       #?c :P374 ?concept_code .
-       ?c :A8 ?concept_code .
-    } 
-} 
+PREFIX ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+
+SELECT (count(distinct ?concept_code) as ?count_concepts_in_valueSet )
+{
+ ?c ncit:A8 ?concept_code .
+}
