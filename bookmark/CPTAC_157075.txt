@@ -1,6 +1,12 @@
-elect distinct (str(?ncicode) as ?code) (str(?ncipt) as ?nci_pt)  (str(?cptacpt) as ?cptac_pt) (str(?cptacsy) as ?cptac_sy) (str(?ncidef) as ?nci_def)
+#### Report of CPTAC concepts in a given subset
+#### To change subset, change the subset code in the line that starts with "values"
+
+
+prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select distinct (str(?ncicode) as ?code) (str(?ncipt) as ?nci_pt)  (str(?cptacpt) as ?cptac_pt) (str(?cptacsy) as ?cptac_sy) (str(?ncidef) as ?nci_def)
 where {
     values ?some_subset { ncit:C157075}
+
     ?s ncit:NHC0 ?ncicode ;
        rdfs:label ?ncipt ;
       ncit:A8 ?some_subset .
@@ -8,8 +14,8 @@ where {
       owl:annotatedSource ?s ;
       owl:annotatedTarget ?cptacpt ;
       owl:annotatedProperty ncit:P90 ;
-      ncit:term-source ?tsp ;
-      ncit:term-group ?ttp;
+      ncit:P384 ?tsp ;
+      ncit:P383 ?ttp;
     filter regex (str(?ttp), "PT")
     filter regex (str(?tsp), "CPTAC")
     optional {
@@ -17,8 +23,8 @@ where {
           owl:annotatedSource ?s ;
           owl:annotatedTarget ?cptacsy ;
           owl:annotatedProperty ncit:P90 ;
-          ncit:term-source ?tss ;
-          ncit:term-group ?tts;
+          ncit:P384 ?tss ;
+          ncit:P383 ?tts;
         filter regex (str(?tts), "SY")
         filter regex (str(?tss), "CPTAC")
     }

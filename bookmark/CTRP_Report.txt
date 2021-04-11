@@ -1,3 +1,6 @@
+#### Report all the CTRP concepts containing full syns with DN term type
+
+
 prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
 select distinct ?code ?preferredname ?displayname ?fullsyn1
 where {
@@ -9,8 +12,8 @@ where {
       owl:annotatedSource ?s ;
       owl:annotatedTarget ?fullsyn1 ;
       owl:annotatedProperty ncit:P90 ;
-      ncit:term-source ?ts ;
-      ncit:term-group ?tt .
+      ncit:P384 ?ts ;
+      ncit:P383 ?tt .
     filter regex(str(?tt), "DN") .
     filter regex(str(?ts), "CTRP") .
 }

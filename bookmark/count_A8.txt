@@ -1,6 +1,10 @@
+#### Count the number of concepts that have a concept_in_subset relation
+#### Seems like for QA purposes this query should be looking at something else?
+
+
 PREFIX ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
 
 SELECT (count(distinct ?concept_code) as ?count_concepts_in_valueSet )
 {
- ?c ncit:A8 ?concept_code .
+  ?c ncit:A8 ?concept_code .
 }

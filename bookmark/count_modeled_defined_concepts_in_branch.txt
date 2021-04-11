@@ -13,6 +13,6 @@ where
   ?eq owl:intersectionOf ?in .
   ?in rdf:rest* ?re .
   ?re rdf:first ?an .
-  ?an owl:onProperty ?role .
+  ?an owl:onProperty ?role  .
 }
 

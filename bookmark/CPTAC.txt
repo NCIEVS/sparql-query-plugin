@@ -9,8 +9,8 @@ where {
       owl:annotatedSource ?s ;
       owl:annotatedTarget ?cptacpt ;
       owl:annotatedProperty ncit:P90 ;
-      ncit:term-source ?tsp ;
-      ncit:term-group ?ttp;
+      ncit:P384 ?tsp ;
+      ncit:P383 ?ttp;
     filter regex (str(?ttp), "PT")
     filter regex (str(?tsp), "CPTAC")
     optional {
@@ -18,8 +18,8 @@ where {
           owl:annotatedSource ?s ;
           owl:annotatedTarget ?cptacsy ;
           owl:annotatedProperty ncit:P90 ;
-          ncit:term-source ?tss ;
-          ncit:term-group ?tts;
+          ncit:P384 ?tss ;
+          ncit:P383 ?tts;
         filter regex (str(?tts), "SY")
         filter regex (str(?tss), "CPTAC")
     }

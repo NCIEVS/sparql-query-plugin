@@ -1,3 +1,5 @@
+####  Report concepts with FDA PT terms with a PQCMC subsource
+
 prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
 select distinct (str(?ncicode) as ?code) (str(?ncipt) as ?nci_pt) (str(?fdapt) as ?fda_pt) (str(?pq_alt_def) as ?alt_def_pqcmc)
 where {
@@ -10,8 +12,8 @@ where {
       owl:annotatedTarget ?fdapt ;
       owl:annotatedProperty ncit:P90 ;
       ncit:P386 ?subsource;
-      ncit:term-source ?tsp ;
-      ncit:term-group ?ttp;
+      ncit:P384 ?tsp ;
+      ncit:P383 ?ttp;
      filter regex (str(?ttp), "PT")
     filter regex (str(?tsp), "FDA")
     filter regex(str(?subsource), "PQCMC") .

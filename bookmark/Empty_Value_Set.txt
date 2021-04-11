@@ -1,8 +1,11 @@
+#### Report concepts with a "Yes" publish_value, but missing a concept_in_subset relation
+
 prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-SELECT distinct ?x ?z
+SELECT distinct ?code ?preferred_name
 {
-            ?x ncit:P372 "Yes"^^<http://www.w3.org/2001/XMLSchema#string> .
-            ?x ncit:P108 ?z  .
-            FILTER (!EXISTS{?y ncit:A8 ?x})
+            ?x ncit:P372 "Yes"^^<http://www.w3.org/2001/XMLSchema#string> ;
+               ncit:P108 ?preferred_name ;
+               ncit:NHC0 ?code
+            FILTER NOT EXISTS {?y ncit:A8 ?x}
 }
 

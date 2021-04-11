@@ -1,5 +1,7 @@
+#### Report concepts with a FDA_UNII_Code property that also contain a FULL_SYN PT with a subsource of UNII
+
 prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-select distinct ?uniiprop ?fullsyn1 ?code
+select distinct ?code ?uniiprop ?fullsyn1
 where {
     ?s ncit:NHC0 ?code .
     ?s ncit:P90 ?fullsyn .
@@ -8,10 +10,10 @@ where {
       owl:annotatedSource ?s ;
       owl:annotatedTarget ?fullsyn1 ;
       owl:annotatedProperty ncit:P90 ;
-      ncit:term-source ?ts ;
-      ncit:term-group ?tt;
+      ncit:P384 ?ts ;
+      ncit:P383 ?tt ;
       ncit:P385 ?sourcecode ;
       ncit:P386 ?subsource .
-    filter regex(str(?tt), "PT") .
-    filter regex(str(?subsource), "UNII") .
+    filter regex (str(?tt), "PT") .
+    filter regex (str(?subsource), "UNII") .
 }

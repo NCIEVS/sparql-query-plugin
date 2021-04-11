@@ -1,5 +1,8 @@
-prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#> 
-select ?code ?o
+#### Identify concepts that contain a semicolon in a FULL_SYN
+
+
+prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+select distinct ?code ?o
 where {
   ?s ncit:NHC0 ?code .
   ?s ncit:P90 ?o .
