@@ -3,12 +3,11 @@
 
 prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
 select  (count(?an) as ?primitive_concept_role_count)
-# ?subject_label ?role_label ?filler_label
-where 
+where
 {
   values ?superclass { ncit:C25791 }
- 
+
  ?subject rdfs:subClassOf ?an ;
-    (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass . 
-  ?an owl:onProperty ?role ;
+    (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass .
+  ?an owl:onProperty ?role .
 }

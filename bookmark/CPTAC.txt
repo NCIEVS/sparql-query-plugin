@@ -22,5 +22,5 @@ where {
           ncit:P383 ?tts;
         filter regex (str(?tts), "SY")
         filter regex (str(?tss), "CPTAC")
-    }
+        }
 }
