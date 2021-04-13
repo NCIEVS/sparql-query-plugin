@@ -6,7 +6,7 @@ public interface SparqlReasoner {
 	
 	String getSampleQuery();
 	
-	SparqlResultSet executeQuery(String query) throws SparqlReasonerException;
+	SparqlResultSet executeQuery(String query, int integer) throws SparqlReasonerException;
 	
 	void dispose();
 }
