@@ -1,0 +1,8 @@
+#### Finds RDF not editable as OWL
+#### File would need to be periodically cleaned
+
+select * where {
+  ?s ?p ?o .
+  filter not exists { ?s rdf:type ?T }
+  filter regex ( str(?s), "^(?:(?!protege).)+$")
+}
