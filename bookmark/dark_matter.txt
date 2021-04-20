@@ -4,5 +4,5 @@
 select * where {
   ?s ?p ?o .
   filter not exists { ?s rdf:type ?T }
-  filter regex ( str(?s), "^(?:(?!protege).)+$")
+  filter regex ( str(?s), "^http://ncicb")
 }
