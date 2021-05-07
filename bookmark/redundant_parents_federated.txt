@@ -1,0 +1,24 @@
+# finds & reports redundant parents in multi-parent concepts
+
+prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+
+select distinct (str(?lcode) as ?code) (str(?llabel) as ?label) (str(?lsem_type) as ?sem_type) (str(?lred_code) as ?red_code) (str(?lredundant) as ?redundant) (str(?lnonred_code) as ?nonred_code) (str(?lnonredundant) as ?nonredundant)
+where {
+  ?s ncit:NHC0 ?lcode ;
+     rdfs:label ?llabel ;
+     ncit:P106 ?lsem_type .
+  ?o2 ncit:NHC0 ?lred_code ;
+     rdfs:label ?lredundant .
+  ?o3 ncit:NHC0 ?lnonred_code ;
+     rdfs:label ?lnonredundant .
+  service <to_be_filled_in>
+ { graph <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.rdf> {
+    ?s rdfs:subClassOf ?o2, ?o3  .
+    ?o3 rdfs:subClassOf+ ?o2 .
+   }
+  }
+}
+order by ?label
+
+ 
+
