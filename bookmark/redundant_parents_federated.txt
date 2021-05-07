@@ -15,7 +15,7 @@ where {
  { graph <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.rdf> {
     ?s rdfs:subClassOf ?o2, ?o3  .
     ?o3 rdfs:subClassOf+ ?o2 .
-   }
+    }
   }
 }
 order by ?label
