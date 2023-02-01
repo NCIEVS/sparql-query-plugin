@@ -11,7 +11,7 @@ where {
      rdfs:label ?lredundant .
   ?o3 ncit:NHC0 ?lnonred_code ;
      rdfs:label ?lnonredundant .
-  service <to_be_filled_in>
+  service <https://shared-dev.semantics.cancer.gov/sparql/>
  { graph <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.rdf> {
     ?s rdfs:subClassOf ?o2, ?o3  .
     ?o3 rdfs:subClassOf+ ?o2 .
