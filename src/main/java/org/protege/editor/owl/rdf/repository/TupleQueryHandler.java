@@ -42,7 +42,7 @@ public class TupleQueryHandler implements TupleQueryResultHandler {
 				String columnName = queryResult.getColumnName(i);
 				Binding binding = bindingSet.getBinding(columnName);
 				Value v = binding != null ? binding.getValue() : (Value) null;
-				row.add(Util.convertValue(triples, v));
+				row.add(Util.convertValue(v));
 			}
 			queryResult.addRow(row);
 			tot_tim += (System.currentTimeMillis() - beg);

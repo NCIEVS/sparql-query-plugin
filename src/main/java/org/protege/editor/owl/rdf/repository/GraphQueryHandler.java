@@ -44,9 +44,9 @@ public class GraphQueryHandler implements RDFHandler {
 	public void handleStatement(Statement stmt) throws RDFHandlerException {
 		try {
 			List<Object> row = new ArrayList<Object>();
-			row.add(Util.convertValue(triples, stmt.getSubject()));
-			row.add(Util.convertValue(triples, stmt.getPredicate()));
-			row.add(Util.convertValue(triples, stmt.getObject()));
+			row.add(Util.convertValue(stmt.getSubject()));
+			row.add(Util.convertValue(stmt.getPredicate()));
+			row.add(Util.convertValue(stmt.getObject()));
 			queryResult.addRow(row);
 		}
 		catch (RepositoryException e) {
