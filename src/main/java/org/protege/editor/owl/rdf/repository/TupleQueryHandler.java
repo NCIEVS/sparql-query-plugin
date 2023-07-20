@@ -3,25 +3,25 @@ package org.protege.editor.owl.rdf.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openrdf.model.Value;
-import org.openrdf.query.Binding;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryResultHandlerException;
-import org.openrdf.query.TupleQueryResultHandler;
-import org.openrdf.query.TupleQueryResultHandlerException;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.Binding;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryResultHandlerException;
+import org.eclipse.rdf4j.query.TupleQueryResultHandler;
+import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import org.protege.editor.owl.rdf.SparqlResultSet;
-import org.protege.owl.rdf.api.OwlTripleStore;
+
 
 public class TupleQueryHandler implements TupleQueryResultHandler {
-	private OwlTripleStore triples;
+	
 	private SparqlResultSet queryResult;
 	private long tot_tim = 0;
 	
 	public long getTotTime() { return tot_tim; }
 	
-	public TupleQueryHandler(OwlTripleStore triples) {
-		this.triples = triples;
+	public TupleQueryHandler() {
+		
 	}
 	
 	public SparqlResultSet getQueryResult() {
@@ -41,8 +41,8 @@ public class TupleQueryHandler implements TupleQueryResultHandler {
 			for (int i = 0; i < queryResult.getColumnCount(); i++) {
 				String columnName = queryResult.getColumnName(i);
 				Binding binding = bindingSet.getBinding(columnName);
-				Value v = binding != null ? binding.getValue() : (Value) null;
-				row.add(Util.convertValue(triples, v));
+				Value v = binding.getValue();
+				row.add(v);
 			}
 			queryResult.addRow(row);
 			tot_tim += (System.currentTimeMillis() - beg);

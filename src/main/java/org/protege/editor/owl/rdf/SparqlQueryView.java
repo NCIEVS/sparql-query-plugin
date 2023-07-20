@@ -3,11 +3,10 @@ package org.protege.editor.owl.rdf;
 import org.protege.editor.core.prefs.Preferences;
 import org.protege.editor.core.prefs.PreferencesManager;
 import org.protege.editor.core.ui.error.ErrorLogPanel;
-import org.protege.editor.owl.rdf.repository.BasicSparqlReasonerFactory;
 import org.protege.editor.owl.ui.renderer.OWLCellRenderer;
 import org.protege.editor.owl.ui.table.BasicOWLTable;
 import org.protege.editor.owl.ui.view.AbstractOWLViewComponent;
-import org.protege.owl.rdf.Utilities;
+import org.protege.owl.rdf.impl.Utilities;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -56,11 +55,9 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 	
 	private void initializeReasoner() {
 		try {
-			List<SparqlInferenceFactory> plugins = Collections.singletonList((SparqlInferenceFactory) new BasicSparqlReasonerFactory());
-			reasoner = plugins.iterator().next().createReasoner(getOWLModelManager().getOWLOntologyManager());
-			reasoner.precalculate();
+			reasoner = new RemoteSparqlReasoner("http://localhost:8890/sparql");
 		}
-		catch (SparqlReasonerException e) {
+		catch (Exception e) {
 			ErrorLogPanel.showErrorDialog(e);
 		}
 	}
