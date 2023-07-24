@@ -1,5 +1,6 @@
 package org.protege.editor.owl.rdf;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +17,6 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
-import org.protege.editor.owl.rdf.repository.TupleQueryHandler;
 
 public class RemoteSparqlReasoner implements SparqlReasoner {
 	
@@ -26,6 +26,8 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 	public RemoteSparqlReasoner(String endp) {
 		sparqlEndpoint = endp;
 		repo = new SPARQLRepository(sparqlEndpoint);
+		
+		
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 			Query q = repo.getConnection().prepareQuery(QueryLanguage.SPARQL, query);
 
 			if (q instanceof TupleQuery) {
-				return handleTupleQuery((TupleQuery) q, 3000);
+				return handleTupleQuery(q, 3000);
 
 
 			}
@@ -58,14 +60,42 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 		return null;
 	}
 
-	private SparqlResultSet handleTupleQuery(TupleQuery tupleQuery, int timeout) throws QueryEvaluationException, TupleQueryResultHandlerException {
-		TupleQueryHandler handler = new TupleQueryHandler();
-		if (timeout > 0) {
-			tupleQuery.setMaxQueryTime(timeout);
-		}
-		tupleQuery.evaluate(handler);
+	private SparqlResultSet handleTupleQuery(Query query, int timeout) throws QueryEvaluationException, TupleQueryResultHandlerException {
 		
-		return handler.getQueryResult();
+
+		List<BindingSet> resultList;
+		try (TupleQueryResult result = ((TupleQuery) query).evaluate()) {
+			resultList = QueryResults.asList(result);
+			
+			SparqlResultSet nrs = null;
+			
+			
+
+			for (BindingSet bs: resultList) {
+				Set<String> names = bs.getBindingNames();
+				List<String> lnames = new ArrayList<String>(names);
+				nrs = new SparqlResultSet(lnames); 
+				Iterator<Binding> it = bs.iterator();
+				while (it.hasNext()) {
+					Binding b = it.next();
+
+					System.out.println((b.getName() + " " + b.getValue()));
+				}
+
+
+
+			}
+			return nrs;
+		}
+		catch (RDF4JException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+		
+		
+		
+		
 	}
 
 	@Override

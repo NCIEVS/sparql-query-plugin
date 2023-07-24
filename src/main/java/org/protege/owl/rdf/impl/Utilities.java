@@ -6,8 +6,6 @@ public class Utilities {
 		
 	}
 	
-	
-	
 	public static boolean isInteger(String input) {
 		try {
 			Integer.parseInt(input);
