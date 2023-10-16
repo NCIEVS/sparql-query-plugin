@@ -11,11 +11,11 @@ import org.protege.editor.owl.rdf.SparqlResultSet;
 import org.protege.owl.rdf.api.OwlTripleStore;
 
 public class GraphQueryHandler implements RDFHandler {
-	private OwlTripleStore triples;
+	//private OwlTripleStore triples;
 	private SparqlResultSet queryResult;
 	
-	public GraphQueryHandler(OwlTripleStore triples) {
-		this.triples = triples;
+	public GraphQueryHandler() {
+		//this.triples = triples;
 	}
 	
 	public SparqlResultSet getQueryResult() {
@@ -44,12 +44,15 @@ public class GraphQueryHandler implements RDFHandler {
 	public void handleStatement(Statement stmt) throws RDFHandlerException {
 		try {
 			List<Object> row = new ArrayList<Object>();
-			row.add(Util.convertValue(triples, stmt.getSubject()));
-			row.add(Util.convertValue(triples, stmt.getPredicate()));
-			row.add(Util.convertValue(triples, stmt.getObject()));
+			//row.add(Util.convertValue(triples, stmt.getSubject()));
+			//row.add(Util.convertValue(triples, stmt.getPredicate()));
+			//row.add(Util.convertValue(triples, stmt.getObject()));
+			row.add(stmt.getSubject());
+			row.add(stmt.getPredicate());
+			row.add(stmt.getObject());
 			queryResult.addRow(row);
 		}
-		catch (RepositoryException e) {
+		catch (Exception e) {
 			throw new RDFHandlerException(e);
 		}	
 	}

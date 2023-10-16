@@ -20,8 +20,8 @@ public class TupleQueryHandler implements TupleQueryResultHandler {
 	
 	public long getTotTime() { return tot_tim; }
 	
-	public TupleQueryHandler(OwlTripleStore triples) {
-		this.triples = triples;
+	public TupleQueryHandler() {
+		////his.triples = triples;
 	}
 	
 	public SparqlResultSet getQueryResult() {
@@ -42,12 +42,13 @@ public class TupleQueryHandler implements TupleQueryResultHandler {
 				String columnName = queryResult.getColumnName(i);
 				Binding binding = bindingSet.getBinding(columnName);
 				Value v = binding != null ? binding.getValue() : (Value) null;
-				row.add(Util.convertValue(triples, v));
+				// May need to convert this
+				row.add(v);
 			}
 			queryResult.addRow(row);
 			tot_tim += (System.currentTimeMillis() - beg);
 		}
-		catch (RepositoryException re) {
+		catch (Exception re) {
 			throw new TupleQueryResultHandlerException(re);
 		}
 	}

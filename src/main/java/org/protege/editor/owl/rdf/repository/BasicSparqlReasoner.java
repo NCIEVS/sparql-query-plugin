@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+//import org.eclipse.rdf4j.repository.Repository;
+
+//import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.openrdf.query.*;
+import org.openrdf.http.client.*;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.GraphQuery;
 import org.openrdf.query.Query;
@@ -11,20 +16,20 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResultHandlerException;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.http.HTTPRepository;
+import org.openrdf.repository.http.HTTPGraphQuery;
 import org.openrdf.rio.RDFHandlerException;
 import org.protege.editor.owl.rdf.SparqlReasoner;
 import org.protege.editor.owl.rdf.SparqlReasonerException;
 import org.protege.editor.owl.rdf.SparqlResultSet;
-import org.protege.owl.rdf.Utilities;
-import org.protege.owl.rdf.api.OwlTripleStore;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.util.NamespaceUtil;
 
 public class BasicSparqlReasoner implements SparqlReasoner {
 	private OWLOntologyManager manager;
-	private OwlTripleStore triples;
+	//private OwlTripleStore triples;
 	
 	public BasicSparqlReasoner(OWLOntologyManager manager) {
 		this.manager = manager;
@@ -47,7 +52,8 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 		return sb.toString();
 	}
 
-	@Override
+	
+	/**
 	public void precalculate() throws SparqlReasonerException {
 		if (triples == null) {
 			try {
@@ -58,20 +64,24 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 			}
 		}
 	}
+	**/
 	
 	@Override
 	public SparqlResultSet executeQuery(String queryString, int timeout) throws SparqlReasonerException {
-		precalculate();
+		//precalculate();
 		try {
+			String sparqlEndpoint = "http://localhost:8890/sparql";
+			Repository repo = new HTTPRepository(sparqlEndpoint);
 			RepositoryConnection connection = null;
+			
 			try {
-				connection = triples.getRepository().getConnection();
+				connection = repo.getConnection();
 				Query query = connection.prepareQuery(QueryLanguage.SPARQL, queryString);
 				if (query instanceof TupleQuery) {
 					return handleTupleQuery((TupleQuery) query, timeout);
 				}
-				else if (query instanceof GraphQuery) {
-					return handleGraphQuery((GraphQuery) query, timeout);
+				else if (query instanceof HTTPGraphQuery) {
+					return handleGraphQuery((HTTPGraphQuery) query, timeout);
 				}
 				else if (query instanceof BooleanQuery) {
 					return handleBooleanQuery((BooleanQuery) query, timeout);
@@ -92,10 +102,11 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 	}
 	
 	private SparqlResultSet handleTupleQuery(TupleQuery tupleQuery, int timeout) throws QueryEvaluationException, TupleQueryResultHandlerException {
-		TupleQueryHandler handler = new TupleQueryHandler(triples);
+		TupleQueryHandler handler = new TupleQueryHandler();
 		if (timeout > 0) {
 			tupleQuery.setMaxQueryTime(timeout);
 		}
+		//TupleQueryResultParserRegistry.getInstance().
 		tupleQuery.evaluate(handler);
 		System.out.println("total time spent in handler " + handler.getTotTime());
 		System.out.println("total time spent in convertin anon nodes " + Util.tot_tim);
@@ -104,7 +115,7 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 	}
 	
 	private SparqlResultSet handleGraphQuery(GraphQuery graph, int timeout) throws QueryEvaluationException, RDFHandlerException {
-		GraphQueryHandler handler = new GraphQueryHandler(triples);
+		GraphQueryHandler handler = new GraphQueryHandler();
 		if (timeout > 0) {
 			graph.setMaxQueryTime(timeout);
 		}

@@ -58,9 +58,9 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 		try {
 			List<SparqlInferenceFactory> plugins = Collections.singletonList((SparqlInferenceFactory) new BasicSparqlReasonerFactory());
 			reasoner = plugins.iterator().next().createReasoner(getOWLModelManager().getOWLOntologyManager());
-			reasoner.precalculate();
+			//reasoner.precalculate();
 		}
-		catch (SparqlReasonerException e) {
+		catch (Exception e) {
 			ErrorLogPanel.showErrorDialog(e);
 		}
 	}

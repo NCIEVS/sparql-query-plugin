@@ -2,7 +2,7 @@ package org.protege.editor.owl.rdf;
 
 public interface SparqlReasoner {
 	
-	void precalculate() throws SparqlReasonerException;
+	//void precalculate() throws SparqlReasonerException;
 	
 	String getSampleQuery();
 	

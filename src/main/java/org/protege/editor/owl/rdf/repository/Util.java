@@ -14,6 +14,7 @@ public class Util {
 		
 	}
 
+	/**
 	public static Object convertValue(OwlTripleStore triples, Value v) throws RepositoryException {
 		Object converted = v;
 		
@@ -30,6 +31,7 @@ public class Util {
 		
 		return converted;
 	}
+	**/
 	
 	
 }
