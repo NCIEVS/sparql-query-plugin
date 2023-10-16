@@ -15,8 +15,11 @@ import org.eclipse.rdf4j.query.QueryResults;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
+import org.eclipse.rdf4j.query.resultio.helpers.QueryResultCollector;
+import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriter;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+
 
 public class RemoteSparqlReasoner implements SparqlReasoner {
 	
@@ -45,8 +48,11 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 	@Override
 	public SparqlResultSet executeQuery(String query, int integer) throws SparqlReasonerException {
 		try {
+			
+			
+			//repo.getConnection().
 
-			Query q = repo.getConnection().prepareQuery(QueryLanguage.SPARQL, query);
+			TupleQuery q = repo.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, query);
 
 			if (q instanceof TupleQuery) {
 				return handleTupleQuery(q, 3000);
@@ -60,11 +66,13 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 		return null;
 	}
 
-	private SparqlResultSet handleTupleQuery(Query query, int timeout) throws QueryEvaluationException, TupleQueryResultHandlerException {
+	private SparqlResultSet handleTupleQuery(TupleQuery query, int timeout) throws QueryEvaluationException, TupleQueryResultHandlerException {
 		
 
+		
+		
 		List<BindingSet> resultList;
-		try (TupleQueryResult result = ((TupleQuery) query).evaluate()) {
+		try (TupleQueryResult result = query.evaluate()) {
 			resultList = QueryResults.asList(result);
 			
 			SparqlResultSet nrs = null;
@@ -90,6 +98,7 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 		catch (RDF4JException e) {
 			e.printStackTrace();
 		}
+		
 		return null;
 
 		
