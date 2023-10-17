@@ -72,6 +72,7 @@ public class BasicSparqlReasoner implements SparqlReasoner {
 		try {
 			String sparqlEndpoint = "http://localhost:8890/sparql";
 			Repository repo = new HTTPRepository(sparqlEndpoint);
+			repo.initialize();
 			RepositoryConnection connection = null;
 			
 			try {

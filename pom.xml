@@ -62,6 +62,7 @@
             <version>${protege.version}</version>
         </dependency>
         
+            
         <dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-repository-sail</artifactId>
@@ -79,6 +80,14 @@
 						<artifactId>sesame-rio-rdfxml</artifactId>
 						<version>${sesame.version}</version>
 					</dependency>
+					
+					<dependency>
+						<groupId>org.openrdf.sesame</groupId>
+						<artifactId>sesame-rio-datatypes</artifactId>
+						<version>${sesame.version}</version>
+					</dependency>
+					
+					
 
 					<dependency>
 						<groupId>org.openrdf.sesame</groupId>
@@ -157,6 +166,116 @@
 						<version>${sesame.version}</version>
 					</dependency>
 					
+					
+					<dependency>
+         	<groupId>org.openrdf.sesame</groupId>
+         	<artifactId>sesame-model</artifactId>
+         	<version>2.7.12</version>
+         </dependency>
+					
+					<!-- https://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+<dependency>
+    <groupId>commons-httpclient</groupId>
+    <artifactId>commons-httpclient</artifactId>
+    <version>3.1</version>
+</dependency>
+					
+        <!--
+        <dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-repository-sail</artifactId>
+			<version>${sesame.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-sail-memory</artifactId>
+			<version>${sesame.version}</version>
+		</dependency>
+		
+					<dependency>
+						<groupId>org.openrdf.sesame</groupId>
+						<artifactId>sesame-rio-rdfxml</artifactId>
+						<version>${sesame.version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.openrdf.sesame</groupId>
+						<artifactId>sesame-model</artifactId>
+						<version>${sesame.version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.openrdf.sesame</groupId>
+						<artifactId>sesame-queryparser-api</artifactId>
+						<version>${sesame.version}</version>
+					</dependency>
+
+
+<dependency>
+    <groupId>org.openrdf.sesame</groupId>
+    <artifactId>sesame-queryresultio-api</artifactId>
+    <version>${sesame.version}</version>
+</dependency>
+
+
+
+
+<dependency>
+    <groupId>org.openrdf.sesame</groupId>
+    <artifactId>sesame-queryresultio-binary</artifactId>
+    <version>${sesame.version}</version>
+    <scope>runtime</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.openrdf.sesame</groupId>
+    <artifactId>sesame-queryresultio-sparqlxml</artifactId>
+    <version>${sesame.version}</version>
+    <scope>runtime</scope>
+</dependency>
+
+
+		
+		
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-queryparser-sparql</artifactId>
+			<version>${sesame.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-queryparser-serql</artifactId>
+			<version>${sesame.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-query</artifactId>
+			<version>${sesame.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-queryalgebra-evaluation</artifactId>
+			<version>${sesame.version}</version>
+		</dependency>
+		
+		
+
+					<dependency>
+						<groupId>org.openrdf.sesame</groupId>
+						<artifactId>sesame-repository-http</artifactId>
+						<version>${sesame.version}</version>
+					</dependency>
+
+					<dependency>
+						<groupId>org.openrdf.sesame</groupId>
+						<artifactId>sesame-http-client</artifactId>
+						<version>${sesame.version}</version>
+					</dependency>
+					
 					<dependency>
          	<groupId>org.openrdf.sesame</groupId>
          	<artifactId>sesame-model</artifactId>
@@ -174,7 +293,7 @@
          	<version>2.7.12</version>
          </dependency>
 					
-					<!-- https://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+-->
 
 					
 					
@@ -261,7 +380,7 @@
                         <Embed-Dependency>sesame-queryparser-sparql, sesame-queryparser-serql, 
                         sesame-queryparser-api, sesame-queryresultio-api, sesame-query, sesame-queryresultio-binary,
                         sesame-queryresultio-sparqlxml, sesame-queryalgebra-evaluation, sesame-model, 
-                        sesame-http-client, commons-httpclient</Embed-Dependency>
+                        sesame-http-client, commons-httpclient, sesame-repository-http, sesame-rio-rdfxml, sesame-rio-datatypes</Embed-Dependency>
                         <Export-Package>
                             org.protege.editor.owl.rdf.*;version=${project.version},
                             org.protege.owl.rdf;version="2.0",
