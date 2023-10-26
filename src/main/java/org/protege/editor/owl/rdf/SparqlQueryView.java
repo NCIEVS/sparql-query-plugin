@@ -33,7 +33,7 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 	protected static final String LAST_EXPORT_FOLDER = "";
 	
 	private SparqlReasoner reasoner;
-	private JList bookmarkList;
+	private JList<String> bookmarkList;
 	private JTextPane queryPane;
 	private JButton executeQuery;
 	private JButton bookmarkBtn;
@@ -55,7 +55,7 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 	
 	private void initializeReasoner() {
 		try {
-			reasoner = new RemoteSparqlReasoner("http://localhost:8890/sparql");
+			reasoner = new RemoteSparqlReasoner(SPARQLPreferences.getServerLocation());
 		}
 		catch (Exception e) {
 			ErrorLogPanel.showErrorDialog(e);
@@ -121,7 +121,7 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 		}
 		
 		queryMap.put("NewQuery", "");
-		bookmarkList = new JList(model);
+		bookmarkList = new JList<String>(model);
 		queryPane = new JTextPane();
 		
 		bookmarkList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -212,7 +212,7 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 					//panel.setCursor(Cursor.getDefaultCursor());
 				}
 				catch (SparqlReasonerException ex) {
-					ErrorLogPanel.showErrorDialog(ex);
+					//ErrorLogPanel.showErrorDialog(ex);
 					JOptionPane.showMessageDialog(getOWLWorkspace(), ex.getMessage() + "\nSee the logs for more information.");
 				}
 			}

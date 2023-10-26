@@ -1,0 +1,59 @@
+package org.protege.editor.owl.rdf.repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.protege.editor.owl.rdf.SparqlResultSet;
+
+
+public class GraphQueryHandler implements RDFHandler {
+	private SparqlResultSet queryResult;
+	
+	public GraphQueryHandler() {
+	}
+	
+	public SparqlResultSet getQueryResult() {
+		return queryResult;
+	}
+
+	@Override
+	public void startRDF() throws RDFHandlerException {
+		List<String> bindingNames = new ArrayList<String>();
+		bindingNames.add("Subject");
+		bindingNames.add("Predicate");
+		bindingNames.add("Object");
+		queryResult = new SparqlResultSet(bindingNames);
+	}
+
+	@Override
+	public void handleComment(String arg0) throws RDFHandlerException {
+	
+	}
+
+	@Override
+	public void handleNamespace(String arg0, String arg1) throws RDFHandlerException {	
+	}
+
+	@Override
+	public void handleStatement(Statement stmt) throws RDFHandlerException {
+		try {
+			List<Object> row = new ArrayList<Object>();
+			row.add(stmt.getSubject());
+			row.add(stmt.getPredicate());
+			row.add(stmt.getObject());
+			queryResult.addRow(row);
+		}
+		catch (Exception e) {
+			throw new RDFHandlerException(e);
+		}	
+	}
+
+	@Override
+	public void endRDF() throws RDFHandlerException {
+
+	}
+
+}

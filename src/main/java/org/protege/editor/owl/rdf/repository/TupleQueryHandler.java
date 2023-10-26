@@ -8,7 +8,6 @@ import org.eclipse.rdf4j.query.AbstractTupleQueryResultHandler;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryResultHandlerException;
-import org.eclipse.rdf4j.query.TupleQueryResultHandler;
 import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.protege.editor.owl.rdf.SparqlResultSet;
@@ -42,7 +41,10 @@ public class TupleQueryHandler extends AbstractTupleQueryResultHandler {
 			for (int i = 0; i < queryResult.getColumnCount(); i++) {
 				String columnName = queryResult.getColumnName(i);
 				Binding binding = bindingSet.getBinding(columnName);
-				Value v = binding.getValue();
+				Value v = null;
+				if (binding != null) {
+					v = binding.getValue();
+				}
 				row.add(v);
 			}
 			queryResult.addRow(row);

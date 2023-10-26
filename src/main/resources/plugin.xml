@@ -19,5 +19,11 @@
         <index value="Z"/>
         <defaultViewConfigFileName value="viewconfig_spq.xml"/>
     </extension>
+    
+    <extension id="ui.preferences.update"
+               point="org.protege.editor.core.application.preferencespanel">
+        <label value="SPARQL Query"/>
+        <class value="org.protege.editor.owl.rdf.SPARQLPreferencesPanel"/>
+    </extension>
 
 </plugin>

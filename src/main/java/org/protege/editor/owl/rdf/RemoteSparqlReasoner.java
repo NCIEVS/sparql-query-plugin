@@ -8,6 +8,8 @@ import java.util.Set;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.BooleanQuery;
+import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.Query;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.QueryLanguage;
@@ -18,17 +20,25 @@ import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
 import org.eclipse.rdf4j.query.resultio.helpers.QueryResultCollector;
 import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriter;
 import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.protege.editor.owl.rdf.repository.GraphQueryHandler;
+import org.protege.editor.owl.rdf.repository.TupleQueryHandler;
 
 
 public class RemoteSparqlReasoner implements SparqlReasoner {
 	
-	private String sparqlEndpoint = "http://localhost:8890/sparql";
+	public static long tot_tim = 0;
+	
+	private String sparqlEndpoint = SPARQLPreferences.getServerLocation();
 	private Repository repo = new SPARQLRepository(sparqlEndpoint);
+	
 	
 	public RemoteSparqlReasoner(String endp) {
 		sparqlEndpoint = endp;
-		repo = new SPARQLRepository(sparqlEndpoint);
+		repo = new SPARQLRepository(sparqlEndpoint, "foobar");
+		repo.initialize();
 		
 		
 	}
@@ -46,65 +56,80 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 	}
 
 	@Override
-	public SparqlResultSet executeQuery(String query, int integer) throws SparqlReasonerException {
+	public SparqlResultSet executeQuery(String query, int timeout) throws SparqlReasonerException {
 		try {
 			
 			
 			//repo.getConnection().
 
-			TupleQuery q = repo.getConnection().prepareTupleQuery(QueryLanguage.SPARQL, query);
+			Query q = repo.getConnection().prepareQuery(QueryLanguage.SPARQL, query);
 
-			if (q instanceof TupleQuery) {
-				return handleTupleQuery(q, 3000);
-
-
-			}
+			
+				
+				if (q instanceof TupleQuery) {
+					return handleTupleQuery((TupleQuery) q, timeout);
+				}
+				else if (q instanceof GraphQuery) {
+					return handleGraphQuery((GraphQuery) q, timeout);
+				}
+				else if (q instanceof BooleanQuery) {
+					return handleBooleanQuery((BooleanQuery) q, timeout);
+				}
+				else {
+					throw new IllegalStateException("Can't handle queries of type " + query.getClass());
+				}
+			
+			
 		}
 		catch (Exception e) {
 			throw new SparqlReasonerException(e);
 		}
-		return null;
 	}
 
 	private SparqlResultSet handleTupleQuery(TupleQuery query, int timeout) throws QueryEvaluationException, TupleQueryResultHandlerException {
 		
 
-		
-		
-		List<BindingSet> resultList;
-		try (TupleQueryResult result = query.evaluate()) {
-			resultList = QueryResults.asList(result);
-			
-			SparqlResultSet nrs = null;
-			
-			
-
-			for (BindingSet bs: resultList) {
-				Set<String> names = bs.getBindingNames();
-				List<String> lnames = new ArrayList<String>(names);
-				nrs = new SparqlResultSet(lnames); 
-				Iterator<Binding> it = bs.iterator();
-				while (it.hasNext()) {
-					Binding b = it.next();
-
-					System.out.println((b.getName() + " " + b.getValue()));
-				}
-
-
-
-			}
-			return nrs;
+		TupleQueryHandler handler = new TupleQueryHandler();
+		if (timeout > 0) {
+			query.setMaxExecutionTime(timeout);
 		}
-		catch (RDF4JException e) {
-			e.printStackTrace();
-		}
+		query.evaluate(handler);
+		System.out.println("total time spent in handler " + handler.getTotTime());
+		System.out.println("total time spent in convertin anon nodes " + tot_tim);
+		tot_tim = 0;
+		return handler.getQueryResult();
 		
-		return null;
+		
 
 		
 		
 		
 		
+	}
+	
+	private SparqlResultSet handleGraphQuery(GraphQuery graph, int timeout) throws QueryEvaluationException, RDFHandlerException {
+		GraphQueryHandler handler = new GraphQueryHandler();
+		if (timeout > 0) {
+			graph.setMaxExecutionTime(timeout);
+		}
+		graph.evaluate(handler);
+		return handler.getQueryResult();
+	}
+	
+	private SparqlResultSet handleBooleanQuery(BooleanQuery booleanQuery, int timeout) throws QueryEvaluationException {
+		List<String> columnNames = new ArrayList<String>();
+		columnNames.add("Result");
+		SparqlResultSet result = new SparqlResultSet(columnNames);
+		List<Object> row = new ArrayList<Object>();
+		if (timeout > 0) {
+			booleanQuery.setMaxExecutionTime(timeout);
+		}
+		
+		
+		
+		row.add(booleanQuery.evaluate() ? "True" : "False");
+		result.addRow(row);
+		return result;
 	}
 
 	@Override
