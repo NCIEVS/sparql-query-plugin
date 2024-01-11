@@ -17,6 +17,7 @@ public class SPARQLPreferences {
     public static final String SPARQL_SERVER_PREFERENCES_KEY = "SPARQLServerPreferences";
     public static final String SERVER_LOCATION = "SERVER_LOCATION";
     public static final String DEFAULT_SERVER = "http://localhost:8890/sparql";
+    public static final String UPDATE_ON_COMMIT = "updateOnCommit";
     
     
 
@@ -44,6 +45,16 @@ public class SPARQLPreferences {
     public static void setServerLocation(String s) {
         getPreferences().putString(SERVER_LOCATION, s);
     }
+    
+    public static boolean getUpdateOnCommit() {
+        return getPreferences().getBoolean(UPDATE_ON_COMMIT, true);
+    }
+
+    public static void setUpdateOnCommit(boolean upc) {
+        getPreferences().putBoolean(UPDATE_ON_COMMIT, upc);
+    }
+    
+    
 
 
     

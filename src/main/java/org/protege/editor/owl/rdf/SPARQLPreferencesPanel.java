@@ -15,6 +15,8 @@ public class SPARQLPreferencesPanel extends OWLPreferencesPanel {
     private static final long serialVersionUID = -818021477356581474L;
 
     private JTextField txtIndexLocation = new JTextField(40);
+    
+    private JCheckBox updOnCommit = new JCheckBox("Update Triple Store on Commits");
 
    
 
@@ -30,6 +32,12 @@ public class SPARQLPreferencesPanel extends OWLPreferencesPanel {
         txtIndexLocation.setText(SPARQLPreferences.getServerLocation());
         
         
+
+        panel.addGroup("Protege Server");
+        panel.addGroupComponent(updOnCommit);
+        updOnCommit.setSelected(SPARQLPreferences.getUpdateOnCommit());
+        
+        
     }
 
     @Override
@@ -40,5 +48,6 @@ public class SPARQLPreferencesPanel extends OWLPreferencesPanel {
     @Override
     public void applyChanges() {
         SPARQLPreferences.setServerLocation(txtIndexLocation.getText());
+        SPARQLPreferences.setUpdateOnCommit(updOnCommit.isSelected());
     }
 }
