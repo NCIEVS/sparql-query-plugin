@@ -1,26 +1,16 @@
 package org.protege.editor.owl.rdf;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.rdf4j.RDF4JException;
-import org.eclipse.rdf4j.query.Binding;
-import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.BooleanQuery;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.Query;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.QueryResults;
 import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
-import org.eclipse.rdf4j.query.resultio.helpers.QueryResultCollector;
-import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriter;
 import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.protege.editor.owl.rdf.repository.GraphQueryHandler;
@@ -37,7 +27,7 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 	
 	public RemoteSparqlReasoner(String endp) {
 		sparqlEndpoint = endp;
-		repo = new SPARQLRepository(sparqlEndpoint, "foobar");
+		repo = new SPARQLRepository(sparqlEndpoint);
 		repo.initialize();
 		
 		

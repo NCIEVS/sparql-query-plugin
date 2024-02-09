@@ -33,9 +33,9 @@ public class SPARQLPreferencesPanel extends OWLPreferencesPanel {
         
         
 
-        panel.addGroup("Protege Server");
-        panel.addGroupComponent(updOnCommit);
-        updOnCommit.setSelected(SPARQLPreferences.getUpdateOnCommit());
+        //panel.addGroup("Protege Server");
+        //panel.addGroupComponent(updOnCommit);
+        //updOnCommit.setSelected(SPARQLPreferences.getUpdateOnCommit());
         
         
     }
