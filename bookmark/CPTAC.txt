@@ -5,21 +5,23 @@ where {
     ?s ncit:NHC0 ?ncicode ;
        rdfs:label ?ncipt ;
        ncit:A8 ?some_subset .
-    [] a owl:Axiom ;
+    optional {
+      [] a owl:Axiom ;
       owl:annotatedSource ?s ;
       owl:annotatedTarget ?cptacpt ;
       owl:annotatedProperty ncit:P90 ;
       ncit:term-source ?tsp ;
-      ncit:term-group ?ttp;
+      ncit:term-group ?ttp .
     filter regex (str(?ttp), "PT")
     filter regex (str(?tsp), "CPTAC")
+    }
     optional {
         [] a owl:Axiom ;
           owl:annotatedSource ?s ;
           owl:annotatedTarget ?cptacsy ;
           owl:annotatedProperty ncit:P90 ;
           ncit:term-source ?tss ;
-          ncit:term-group ?tts;
+          ncit:term-group ?tts .
         filter regex (str(?tts), "SY")
         filter regex (str(?tss), "CPTAC")
     }

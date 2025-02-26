@@ -6,13 +6,13 @@ prefix ncit:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
 select (count(distinct ?subject) as ?modeled_defined_concept_count)
 where 
 {
-  values ?superclass { ncit:C4196 }
+  values ?superclass { ncit:C25791 }
 
   ?subject (rdfs:subClassOf|(owl:equivalentClass/owl:intersectionOf/rdf:rest*/rdf:first) )* ?superclass ; 
     owl:equivalentClass ?eq .
   ?eq owl:intersectionOf ?in .
   ?in rdf:rest* ?re .
   ?re rdf:first ?an .
-  ?an owl:onProperty ?role  ;
+  ?an owl:onProperty ?role  
 }
 
