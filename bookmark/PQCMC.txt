@@ -7,20 +7,24 @@ where {
     ?s ncit:NHC0 ?ncicode ;
        rdfs:label ?ncipt ;
        ncit:A8 ?some_subset .
+optional {
     [] a owl:Axiom ;
       owl:annotatedSource ?s ;
       owl:annotatedTarget ?fdapt ;
       owl:annotatedProperty ncit:P90 ;
       ncit:P386 ?subsource;
       ncit:P384 ?tsp ;
-      ncit:P383 ?ttp;
+      ncit:P383 ?ttp .
      filter regex (str(?ttp), "PT")
     filter regex (str(?tsp), "FDA")
-    filter regex(str(?subsource), "PQCMC") .
+    filter regex(str(?subsource), "PQCMC") 
+}
+optional {
     [] a owl:Axiom ;
       owl:annotatedSource ?s ;
       owl:annotatedProperty ncit:P325 ;
       owl:annotatedTarget ?pq_alt_def;
-      ncit:P378 ?defsource;
-    filter regex(str(?defsource), "PQCMC") .
+      ncit:P378 ?defsource .
+    filter regex(str(?defsource), "PQCMC") 
   }
+}
