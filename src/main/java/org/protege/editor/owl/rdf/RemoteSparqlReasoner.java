@@ -3,6 +3,7 @@ package org.protege.editor.owl.rdf;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.BooleanQuery;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.Query;
@@ -10,9 +11,11 @@ import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.protege.editor.owl.model.triplestore.TripleStoreContext;
 import org.protege.editor.owl.rdf.repository.GraphQueryHandler;
 import org.protege.editor.owl.rdf.repository.TupleQueryHandler;
 
@@ -54,6 +57,15 @@ public class RemoteSparqlReasoner implements SparqlReasoner {
 
 			Query q = repo.getConnection().prepareQuery(QueryLanguage.SPARQL, query);
 
+			// Scope the query's default graph to the opened project's Virtuoso graph so a shared
+			// endpoint holding several project graphs does not return duplicated/cross-project results.
+			// Explicit GRAPH clauses are left unrestricted. No project open -> unscoped (as before).
+			String graph = TripleStoreContext.getInstance().graph();
+			if (graph != null && !graph.isEmpty()) {
+				SimpleDataset dataset = new SimpleDataset();
+				dataset.addDefaultGraph(SimpleValueFactory.getInstance().createIRI(graph));
+				q.setDataset(dataset);
+			}
 			
 				
 				if (q instanceof TupleQuery) {
