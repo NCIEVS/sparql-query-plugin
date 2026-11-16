@@ -3,6 +3,7 @@ package org.protege.editor.owl.rdf;
 import org.protege.editor.core.prefs.Preferences;
 import org.protege.editor.core.prefs.PreferencesManager;
 import org.protege.editor.core.ui.error.ErrorLogPanel;
+import org.protege.editor.owl.model.triplestore.TripleStoreContext;
 import org.protege.editor.owl.ui.renderer.OWLCellRenderer;
 import org.protege.editor.owl.ui.table.BasicOWLTable;
 import org.protege.editor.owl.ui.view.AbstractOWLViewComponent;
@@ -33,6 +34,8 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 	protected static final String LAST_EXPORT_FOLDER = "";
 	
 	private SparqlReasoner reasoner;
+	// Endpoint the current reasoner was built for; drives a rebuild when it changes (pref edit or project switch).
+	private String reasonerEndpoint;
 	private JList<String> bookmarkList;
 	private JTextPane queryPane;
 	private JButton executeQuery;
@@ -55,10 +58,30 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 	
 	private void initializeReasoner() {
 		try {
-			reasoner = new RemoteSparqlReasoner(SPARQLPreferences.getServerLocation());
+			ensureReasoner();
 		}
 		catch (Exception e) {
 			ErrorLogPanel.showErrorDialog(e);
+		}
+	}
+
+	// The endpoint to query: a server project points the lazy model at its Virtuoso endpoint, so reuse
+	// that (the SPARQL tab then targets the same store with no manual config); otherwise the preference.
+	private String effectiveEndpoint() {
+		TripleStoreContext ctx = TripleStoreContext.getInstance();
+		if (ctx.isActive() && ctx.endpoint() != null && !ctx.endpoint().isEmpty()) {
+			return ctx.endpoint();
+		}
+		return SPARQLPreferences.getServerLocation();
+	}
+
+	// (Re)build the reasoner when the effective endpoint changes, so editing the URL preference or
+	// switching projects takes effect without reopening the tab -- the old code captured it once at init.
+	private void ensureReasoner() {
+		String endp = effectiveEndpoint();
+		if (reasoner == null || !endp.equals(reasonerEndpoint)) {
+			reasoner = new RemoteSparqlReasoner(endp);
+			reasonerEndpoint = endp;
 		}
 	}
 	
@@ -194,6 +217,7 @@ public class SparqlQueryView extends AbstractOWLViewComponent {
 					//panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					
 					//SparqlResultSet result = reasoner.executeQuery(query);
+					ensureReasoner();
 					SparqlResultSet result = reasoner.executeQuery(query, (Integer) timeout.getValue());
 					System.out.println("The query took " + (System.currentTimeMillis() - beg));
 					if (result.getRowCount() == 0) {
